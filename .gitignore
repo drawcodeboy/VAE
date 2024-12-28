@@ -1,0 +1,9 @@
+# VScode
+.vscode
+
+# pycache
+**/__pycache__/**
+
+# data
+data/*
+!data/temp.txt
