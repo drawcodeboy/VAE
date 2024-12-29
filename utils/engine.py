@@ -17,7 +17,7 @@ def train_one_epoch(model, dataloader, loss_fn, optimizer, scheduler, device):
         loss.backward()
         optimizer.step()
         
-        print(f"\rTraining: {100*batch_idx/len(dataloader):.2f}%, ELBO: {-sum(total_loss)/len(total_loss):.6f}, LR: {scheduler.get_last_lr()[0]:.6f}", end="")
+        print(f"\rTraining: {100*batch_idx/len(dataloader):.2f}%, ELBO: {sum(total_loss)/len(total_loss):.6f}, LR: {scheduler.get_last_lr()[0]:.6f}", end="")
     print()
     
     return sum(total_loss)/len(total_loss)
