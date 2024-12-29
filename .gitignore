@@ -8,5 +8,9 @@
 data/*
 !data/temp.txt
 
+# saved
+saved/*
+!saved/temp.txt
+
 # Virtual Environment
 .venv/
