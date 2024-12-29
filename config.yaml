@@ -1,0 +1,17 @@
+expr: Test experiment # Experiment Name
+
+device: cpu
+
+data:
+  dataset: MNIST
+  mode: train
+
+model:
+  name: VAE
+  latent_size: 10
+  enc_conv_in_channels: 1
+  enc_conv_out_channels: 16
+  x_size: [1, 28, 28]
+
+loss_fn: ELBO
+
