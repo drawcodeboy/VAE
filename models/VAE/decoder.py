@@ -14,12 +14,13 @@ class Decoder(nn.Module):
         self.output_size = 1
         for size in x_size:
             self.output_size *= size
+        self.x_size = x_size
         
         self.li = nn.Linear(self.latent_size, self.output_size)
         self.sigmoid = nn.Sigmoid()
         
     def forward(self, z):
-        x = self.li(z).reshape(-1, *x_size)
+        x = self.li(z).reshape(-1, *self.x_size)
         x = self.sigmoid(x) # p(x|z)
     
         return x

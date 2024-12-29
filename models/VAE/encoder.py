@@ -41,7 +41,6 @@ class Encoder(nn.Module):
     
     def reparameterization_trick(self, mu, log_var):
         eps = self.gaussian.sample()
-        print(eps.shape, mu.shape, log_var.shape)
         
         std = torch.exp(0.5 * log_var) # (1) 0.5 * log_var -> log_std, (2) torch.exp(log_std) -> std
         

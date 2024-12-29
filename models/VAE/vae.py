@@ -21,4 +21,4 @@ class VAE(nn.Module):
     def forward(self, x):
         z, mu, std = self.encoder(x)
         x = self.decoder(z)
-        return z, mu, std, x
+        return x, mu, std
