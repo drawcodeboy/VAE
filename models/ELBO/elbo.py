@@ -4,7 +4,7 @@ import torch.distributions as dist
 import torch.nn.functional as F
 
 class ELBO(nn.Module):
-    r'''
+    '''
         Evidence Lower Bound
         - Evidence를 실제로 구하는 것은 어렵다. -> 고차원 벡터에 대한 적분 문제
         - Evidence의 Likelihood를 maximize하여, 근사한 분포를 찾는 것을 목적으로 한다.
@@ -24,11 +24,16 @@ class ELBO(nn.Module):
         왜냐하면, z에 대한 기댓값이라 z에 대해 적분을 해야 한다는 의미인데, 이는 Evidence를 못 구하는 것과
         같이 기댓값을 구하면 안 된다. 그래서, Monte-Carlo estimation을 통해 기댓값(가중 평균)이 아닌 평균으로
         계산을 한다. 이는 큰 수의 법칙에 의해 그렇게 정리가 가능하다.
-        -(1/N)\sum^{N}(log p(x|z))
+        -(1/N)*sum^{N}(log p(x|z))
         그렇다면, 이 term이 의미하는 바는 실제 데이터가 주어졌을 때, 해당 확률 분포일 확률을 의미하는
         log-likelihood가 되고, 이를 최대화시킨다는 것은 NLL을 구한다는 것과 같다.
         그래서, 실제 데이터와 예측 데이터(확률)의 차이를 구하게 되기 때문에 Reconstruction term이라 불린다.
         
+        허나, 이를 계산하는 코드에서 Binary Cross Entropy가 나온 것이 뜬금 없게 느껴질 수도 있다.
+        하지만, 생각해보라. x의 각 픽셀은 모두 [0, 1]범위를 갖는 분포에서 값이 나오게 된다.
+        근사적으로 접근해보면 이는 베르누이 분포라 볼 수도 있다. 그러면, 베르누이 분포의 함수 
+        p^{x}(1-p)^{1-x}로 정의가 되어있고, 이의 Likelihood를 계산하기 위해 log를 씌우면
+        xlogp+(1-x)log(1-p)로 이는 BCE와 정확히 같다.
     '''
     def __init__(self, latent_size=10):
         super().__init__()
