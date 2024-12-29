@@ -33,7 +33,7 @@ class ELBO(nn.Module):
         하지만, 생각해보라. x의 각 픽셀은 모두 [0, 1]범위를 갖는 분포에서 값이 나오게 된다.
         근사적으로 접근해보면 이는 베르누이 분포라 볼 수도 있다. 그러면, 베르누이 분포의 함수 
         p^{x}(1-p)^{1-x}로 정의가 되어있고, 이의 Likelihood를 계산하기 위해 log를 씌우면
-        xlogp+(1-x)log(1-p)로 이는 BCE와 정확히 같다.
+        xlogp+(1-x)log(1-p)로 이는 -BCE와 정확히 같다.
     '''
     def __init__(self, latent_size=10):
         super().__init__()
@@ -56,6 +56,12 @@ class ELBO(nn.Module):
         # 2. Reconstruction Term
         second_term = F.binary_cross_entropy(x_prime, x, reduction='mean') # NLL이랑 같음
         
-        elbo = -first_term + second_term
+        # 원래는 -Regular + Reconstruct
+        # 하지만, Maximize를 시켜야 하기 때문에 부호를 뒤집어서 Regular - Reconstruct
+        # Regular의 경우 KL을 계산하고 끝
+        # Reconstruct의 경우 BCE 수식 자체가 의도하는 Reconstruct에 음수가 붙는 것이라
+        # 아래와 같이 더해주면 된다.
         
-        return -elbo # ELBO를 최대화하는 게 목적이기 떄문에 Negative
+        elbo = first_term + second_term
+        
+        return elbo # ELBO를 최대화하는 게 목적이기 떄문에 Negative

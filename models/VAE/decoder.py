@@ -3,7 +3,7 @@ from torch import nn
 
 class Decoder(nn.Module):
     def __init__(self,
-                 latent_size:int=10,
+                 latent_size:int=200,
                  x_size:tuple=(1, 28, 28)):
         super().__init__()
         

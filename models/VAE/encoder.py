@@ -4,24 +4,21 @@ from torch.distributions.normal import Normal
 
 class Encoder(nn.Module):
     def __init__(self,
-                 latent_size:int=10,
-                 in_channels:int=1,
-                 out_channels:int=16):
+                 latent_size:int=200):
         '''
             latent_size(int): latent variable(z)의 크기
         '''
         
         super().__init__()
         
-        self.conv = nn.Conv2d(in_channels=in_channels,
-                              out_channels=out_channels,
-                              kernel_size=3)
-        self.relu = nn.ReLU()
-        
         self.latent_size = latent_size
         
-        self.mu = nn.Linear(in_features=out_channels, out_features=self.latent_size)
-        self.log_var = nn.Linear(in_features=out_channels, out_features=self.latent_size)
+        self.li1 = nn.Linear(784, self.latent_size)
+        self.li2 = nn.Linear(self.latent_size, self.latent_size)
+        self.relu = nn.ReLU()
+        
+        self.mu = nn.Linear(in_features=self.latent_size, out_features=self.latent_size)
+        self.log_var = nn.Linear(in_features=self.latent_size, out_features=self.latent_size)
         
         # Gaussian, N(0, 1)
         # loc = mean, scale = sigma
@@ -29,14 +26,14 @@ class Encoder(nn.Module):
                                scale=torch.ones(self.latent_size))
         
     def forward(self, x):
-        x = self.relu(self.conv(x))
-        x = x.flatten(2).mean(2) # Global Average Pooling, (B, C, W, H) -> (B, C)
+        x = self.relu(self.li1(x.reshape(x.shape[0], -1)))
+        x = self.relu(self.li2(x))
         
-        mu = self.mu(x) # (B, C) -> (B, latent_size)
-        log_var = self.log_var(x) # (B, C) -> (B, latent_size)
+        mu = self.mu(x)
+        log_var = self.log_var(x)
         
         z, mu, std = self.reparameterization_trick(mu, log_var)
-        
+
         return z, mu, std
     
     def reparameterization_trick(self, mu, log_var):
