@@ -57,6 +57,5 @@ class ELBO(nn.Module):
         second_term = F.binary_cross_entropy(x_prime, x, reduction='mean') # NLL이랑 같음
         
         elbo = -first_term + second_term
-        print(first_term, second_term)
         
         return -elbo # ELBO를 최대화하는 게 목적이기 떄문에 Negative
