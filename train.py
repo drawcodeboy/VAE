@@ -34,8 +34,6 @@ def main(cfg):
     model_cfg = cfg['model']
     model = load_model(model=model_cfg['name'],
                        latent_size=model_cfg['latent_size'],
-                       enc_conv_in_channels=model_cfg['enc_conv_in_channels'],
-                       enc_conv_out_channels=model_cfg['enc_conv_out_channels'],
                        x_size=tuple(model_cfg['x_size'])).to(device)
     print(f"Load Model {model_cfg['name']}")
     
@@ -67,7 +65,6 @@ def main(cfg):
     # Train
     total_train_loss = []
     total_start_time = int(time.time())
-    min_loss = 1000.
     
     for current_epoch in range(1, hp_cfg['epochs']+1):
         print("======================================================")
@@ -79,8 +76,7 @@ def main(cfg):
         elapsed_time = int(time.time()) - start_time
         print(f"Train Time: {elapsed_time//60:02d}m {elapsed_time%60:02d}s\n")
         
-        if train_loss < min_loss:
-            min_loss = train_loss
+        if current_epoch % 10 == 0:
             save_model_ckpt(model_cfg['name'], data_cfg['dataset'], current_epoch,
                             model, cfg['save_path'])
 
