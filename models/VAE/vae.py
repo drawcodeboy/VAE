@@ -10,6 +10,7 @@ class VAE(nn.Module):
                  enc_conv_in_channels=1,
                  enc_conv_out_channels=16,
                  x_size=(1, 28, 28)):
+        super().__init__()
         
         self.encoder = Encoder(latent_size=latent_size,
                                in_channels=enc_conv_in_channels,
