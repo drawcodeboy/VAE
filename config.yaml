@@ -1,16 +1,14 @@
-expr: Test experiment # Experiment Name
+expr: Experiment
 
 device: cpu
 
 data:
   dataset: MNIST
-  mode: train
+  mode: train # should consider train or test!
 
 model:
   name: VAE
-  latent_size: 10
-  enc_conv_in_channels: 1
-  enc_conv_out_channels: 16
+  latent_size: 100
   x_size: [1, 28, 28]
 
 loss_fn: ELBO
@@ -23,3 +21,5 @@ hyperparams:
   batch_size: 16
 
 save_path: saved
+
+load_weights: vae.mnist.100epochs.pth

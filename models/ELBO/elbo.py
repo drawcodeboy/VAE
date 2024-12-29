@@ -51,10 +51,12 @@ class ELBO(nn.Module):
         prior_mu, prior_std = torch.zeros(self.latent_size), torch.ones(self.latent_size)
         prior = dist.Normal(prior_mu, prior_std) # p(z)
         variational = dist.Normal(mu, std) # q(z|x)
-        first_term = dist.kl_divergence(variational, prior).mean() # args 순서 중요
+        first_term = dist.kl_divergence(variational, prior).sum() # args 순서 중요
+        first_term /= x.shape[0]
         
         # 2. Reconstruction Term
-        second_term = F.binary_cross_entropy(x_prime, x, reduction='mean') # NLL이랑 같음
+        second_term = F.binary_cross_entropy(x_prime, x, reduction='sum') # NLL이랑 같음
+        second_term /= x.shape[0]
         
         # 원래는 -Regular + Reconstruct
         # 하지만, Maximize를 시켜야 하기 때문에 부호를 뒤집어서 Regular - Reconstruct
@@ -62,6 +64,6 @@ class ELBO(nn.Module):
         # Reconstruct의 경우 BCE 수식 자체가 의도하는 Reconstruct에 음수가 붙는 것이라
         # 아래와 같이 더해주면 된다.
         
-        elbo = first_term + second_term
+        elbo = first_term + second_term # 이건 -ELBO임을 알고 있어야 한다.
         
         return elbo # ELBO를 최대화하는 게 목적이기 떄문에 Negative

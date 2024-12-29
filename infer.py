@@ -7,6 +7,7 @@ from utils import *
 
 import torch
 import matplotlib.pyplot as plt
+import cv2
 
 def get_args_parser():
     parser = argparse.ArgumentParser(add_help=False)
@@ -49,15 +50,12 @@ def main(cfg, args):
     x_prime, _, __ = model(x)
     
     # Reshape & Visualization
-    x = x.reshape(28, 28, 1).detach().cpu().numpy()
-    x_prime = x_prime.reshape(28, 28, 1).detach().cpu().numpy()
+    x = x.reshape(28, 28, 1).detach().cpu().numpy() * 255.
+    x_prime = x_prime.reshape(28, 28, 1).detach().cpu().numpy() * 255.
     
-    fig, axes = plt.subplots(1, 2)
-    axes[0].imshow(x, cmap='gray')
-    axes[1].imshow(x_prime, cmap='gray')
+    cv2.imwrite('figures/original.jpg', x)
+    cv2.imwrite(f'figures/generation_{int(cfg['load_weights'][10:13]):03d}.jpg', x_prime)
     
-    plt.show()
-
 if __name__ == '__main__':
     with open('config.yaml') as f:
         cfg = yaml.full_load(f)
