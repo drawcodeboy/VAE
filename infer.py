@@ -6,13 +6,18 @@ from models import load_model
 from utils import *
 
 import torch
+import torch.distributions as dist
 import matplotlib.pyplot as plt
 import cv2
 
 def get_args_parser():
     parser = argparse.ArgumentParser(add_help=False)
     
-    parser.add_argument('--num', type=int, default=0)
+    # --num 
+    # (1) if --method=='reconstruct' -> Dataset sample num 
+    # (2) if --method=='generate' -> Figure save num 
+    parser.add_argument('--num', type=int, default=0) 
+    parser.add_argument('--method', type=str, default='generate')
     
     return parser
 
@@ -27,10 +32,11 @@ def main(cfg, args):
         device = 'cpu'
     
     # Load Dataset
-    data_cfg = cfg['data']
-    test_ds = load_dataset(dataset=cfg['data']['dataset'],
-                            mode=cfg['data']['mode'])
-    print(f"Load Dataset {data_cfg['dataset']}")
+    if(args.method == 'reconstruct'):
+        data_cfg = cfg['data']
+        test_ds = load_dataset(dataset=cfg['data']['dataset'],
+                                mode=cfg['data']['mode'])
+        print(f"Load Dataset {data_cfg['dataset']}")
     
     # Load Model
     model_cfg = cfg['model']
@@ -42,19 +48,34 @@ def main(cfg, args):
     model.load_state_dict(ckpt['model'])
     print(f"Load Model {model_cfg['name']}")
     
-    # Load Sample
-    x, _ = test_ds[args.num]
-    x = x.unsqueeze(0) # (C, W, H) -> (B, C, W, H)
+    if(args.method == 'reconstruct'):
+        # Load Sample
+        x, _ = test_ds[args.num]
+        x = x.unsqueeze(0) # (C, W, H) -> (B, C, W, H)
+        
+        # Infer
+        x_prime, _, __ = model(x)
+        
+        # Reshape & Visualization
+        x = x.reshape(28, 28, 1).detach().cpu().numpy() * 255.
+        x_prime = x_prime.reshape(28, 28, 1).detach().cpu().numpy() * 255.
+        
+        cv2.imwrite('figures/original.jpg', x)
+        cv2.imwrite(f'figures/reconstruction_{int(cfg['load_weights'][10:13]):03d}.jpg', x_prime)
     
-    # Infer
-    x_prime, _, __ = model(x)
-    
-    # Reshape & Visualization
-    x = x.reshape(28, 28, 1).detach().cpu().numpy() * 255.
-    x_prime = x_prime.reshape(28, 28, 1).detach().cpu().numpy() * 255.
-    
-    cv2.imwrite('figures/original.jpg', x)
-    cv2.imwrite(f'figures/generation_{int(cfg['load_weights'][10:13]):03d}.jpg', x_prime)
+    elif(args.method == 'generate'):
+        # Random Sampling from Gaussian
+        gaussian = dist.Normal(loc=torch.zeros(model_cfg['latent_size']),
+                               scale=torch.ones(model_cfg['latent_size']))
+        random_vector = gaussian.sample()
+        
+        # Generation
+        x_prime = model.decoder(random_vector)
+        
+        # Reshape & Visualization
+        x_prime = x_prime.reshape(28, 28, 1).detach().cpu().numpy() * 255.
+        
+        cv2.imwrite(f'figures/generation_{int(cfg['load_weights'][10:13]):03d}_{args.num:02d}.jpg', x_prime)
     
 if __name__ == '__main__':
     with open('config.yaml') as f:
