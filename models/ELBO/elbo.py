@@ -17,6 +17,10 @@ class ELBO(nn.Module):
         이 ELBO는 -KL(q(z|x)||p(z)) + E[log p(x|z)]이며, 첫 번째 term은 
         Approximate Posterior(q(z|x))를 update시켜 Prior(p(z))와 유사하게 만들겠다는 의미이다.
         Prior과 유사하게 만드는 이유는 Posterior이 특정 데이터 x에 과하게 의존하지 않도록 하기 위함이다.
+        즉, 잠재 공간의 일반화(과적합 방지)를 수행하려는 목적이 있다. 
+        -> 이런 수식을 통해 '잠재 공간은 N(0, 1)에서 샘플링 된다'의 의도를 가지는 것을 알 수 있고,
+        이에 따라 Gaussian에서 랜덤으로 샘플링한 Vector를 디코더에 넣으면, 새로운 데이터가 생성된다.
+        
         그래서, Regularization term이라고도 불린다.
         
         (2nd Term, Reconstruction Term)
