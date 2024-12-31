@@ -22,4 +22,4 @@ hyperparams:
 
 save_path: saved
 
-load_weights: vae.mnist.100epochs.pth
+load_weights: vae.mnist.200epochs.pth
