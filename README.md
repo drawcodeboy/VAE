@@ -13,7 +13,7 @@
 ### (2) Generation from random vector 
 
 $$
-p_{\theta}(x\mid z)\:\:z \sim N(0, 1)
+p_{\theta}(x\mid z), \\ \\ z \sim N(0, 1)
 $$
 
 <p align="center">
