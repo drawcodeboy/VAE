@@ -10,7 +10,9 @@
     <img src="./figures/reconstruction_100.jpg" width="15%" height="15%">
 </p>
 
-### (2) Generation from random vector ($x \sim N(0, 1)$)
+### (2) Generation from random vector 
+* $x \sim N(0, 1)$
+
 <p align="center">
     <img src="./figures/generation_200_01.jpg" width="20%" height="20%">
     <img src="./figures/generation_200_02.jpg" width="20%" height="20%">
