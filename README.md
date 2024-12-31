@@ -11,7 +11,9 @@
 </p>
 
 ### (2) Generation from random vector 
-* $x \sim N(0, 1)$
+$
+p_{\theta}(x\mid z)\:\:z \sim N(0, 1)
+$
 
 <p align="center">
     <img src="./figures/generation_200_01.jpg" width="20%" height="20%">
