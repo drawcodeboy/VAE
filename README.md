@@ -1,12 +1,11 @@
 # VAE Implementation with PyTorch
 
-### (1) Reconstruction: Original > 10 > 20 > 30 > 50> 100 (Epochs)
+### (1) Reconstruction: Original > 10 > 20 > 30 > 100 (Epochs)
 <p align="center">
     <img src="./figures/original.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_010.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_020.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_030.jpg" width="15%" height="15%">
-    <img src="./figures/reconstruction_050.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_100.jpg" width="15%" height="15%">
 </p>
 
