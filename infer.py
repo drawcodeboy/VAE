@@ -51,7 +51,7 @@ def main(cfg, args):
     if(args.method == 'reconstruct'):
         # Load Sample
         x, _ = test_ds[args.num]
-        x = x.unsqueeze(0) # (C, W, H) -> (B, C, W, H)
+        x = x.unsqueeze(0).to(device) # (C, W, H) -> (B, C, W, H)
         
         # Infer
         x_prime, _, __ = model(x)
@@ -61,13 +61,13 @@ def main(cfg, args):
         x_prime = x_prime.reshape(28, 28, 1).detach().cpu().numpy() * 255.
         
         cv2.imwrite('figures/original.jpg', x)
-        cv2.imwrite(f'figures/reconstruction_{int(cfg['load_weights'][10:13]):03d}.jpg', x_prime)
+        cv2.imwrite(f"figures/reconstruction_{int(cfg['load_weights'][10:13]):03d}.jpg", x_prime)
     
     elif(args.method == 'generate'):
         # Random Sampling from Gaussian
         gaussian = dist.Normal(loc=torch.zeros(model_cfg['latent_size']),
                                scale=torch.ones(model_cfg['latent_size']))
-        random_vector = gaussian.sample()
+        random_vector = gaussian.sample().to(device)
         
         # Generation
         x_prime = model.decoder(random_vector)
@@ -75,7 +75,7 @@ def main(cfg, args):
         # Reshape & Visualization
         x_prime = x_prime.reshape(28, 28, 1).detach().cpu().numpy() * 255.
         
-        cv2.imwrite(f'figures/generation_{int(cfg['load_weights'][10:13]):03d}_{args.num:02d}.jpg', x_prime)
+        cv2.imwrite(f"figures/generation_{int(cfg['load_weights'][10:13]):03d}_{args.num:02d}.jpg", x_prime)
     
 if __name__ == '__main__':
     with open('config.yaml') as f:
