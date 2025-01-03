@@ -1,6 +1,6 @@
 expr: Experiment
 
-device: cpu
+device: cuda
 
 data:
   dataset: MNIST
@@ -12,7 +12,7 @@ model:
   x_size: [1, 28, 28]
 
 loss_fn: ELBO
-
+ 
 hyperparams:
   optim: AdamW
   lr: 0.0001
