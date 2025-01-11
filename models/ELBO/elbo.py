@@ -52,7 +52,7 @@ class ELBO(nn.Module):
         '''
         
         # 1. Regularization Term
-        prior_mu, prior_std = torch.zeros(self.latent_size), torch.ones(self.latent_size)
+        prior_mu, prior_std = torch.zeros(self.latent_size).to(mu.device), torch.ones(self.latent_size).to(mu.device)
         prior = dist.Normal(prior_mu, prior_std) # p(z)
         variational = dist.Normal(mu, std) # q(z|x)
         first_term = dist.kl_divergence(variational, prior).sum() # args 순서 중요

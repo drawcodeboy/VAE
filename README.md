@@ -4,14 +4,12 @@
 * Variational Autoencoder
 
 ## Preview
-
-### (1) Reconstruction: Original > 10 > 20 > 30 > 50> 100 (Epochs)
+### (1) Reconstruction: Original > 10 > 20 > 30 > 100 (Epochs)
 <p align="center">
     <img src="./figures/original.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_010.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_020.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_030.jpg" width="15%" height="15%">
-    <img src="./figures/reconstruction_050.jpg" width="15%" height="15%">
     <img src="./figures/reconstruction_100.jpg" width="15%" height="15%">
 </p>
 
@@ -53,4 +51,4 @@ python infer.py --method=generate --num=1 # Figure save num
 ```
 
 ## References
-1. <a href="https://arxiv.org/pdf/1312.6114">Kingma, D. P. (2013). Auto-encoding variational bayes. <i>arXiv preprint arXiv:1312.6114.</i></a>
+1. <i><b>VAE</b></i>: <a href="https://arxiv.org/pdf/1312.6114">Kingma, D. P. (2013). Auto-encoding variational bayes. <i>arXiv preprint arXiv:1312.6114.</i></a>

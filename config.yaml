@@ -1,6 +1,6 @@
 expr: Experiment
 
-device: cpu
+device: cuda
 
 data:
   dataset: MNIST
@@ -12,14 +12,14 @@ model:
   x_size: [1, 28, 28]
 
 loss_fn: ELBO
-
+ 
 hyperparams:
   optim: AdamW
   lr: 0.0001
   weight_decay: 0.001
-  epochs: 100
+  epochs: 50
   batch_size: 16
 
 save_path: saved
 
-load_weights: vae.mnist.200epochs.pth
+load_weights: vae.mnist.050epochs.pth
