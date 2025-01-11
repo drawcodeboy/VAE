@@ -1,5 +1,10 @@
 # VAE Implementation with PyTorch
 
+## Description
+* Variational Autoencoder
+
+## Preview
+
 ### (1) Reconstruction: Original > 10 > 20 > 30 > 50> 100 (Epochs)
 <p align="center">
     <img src="./figures/original.jpg" width="15%" height="15%">
