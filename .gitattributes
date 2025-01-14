@@ -1,0 +1,11 @@
+# 모든 파일 기본 설정
+* text=auto
+
+# 특정 확장자만 UTF-8로 강제
+*.txt text working-tree-encoding=UTF-8
+*.sh text working-tree-encoding=UTF-8
+*.md text working-tree-encoding=UTF-8
+*.html text working-tree-encoding=UTF-8
+*.cpp text working-tree-encoding=UTF-8
+*.hpp text working-tree-encoding=UTF-8
+*.py text working-tree-encoding=UTF-8
