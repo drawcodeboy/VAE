@@ -8,7 +8,8 @@ data:
 
 model:
   name: VAE
-  dims: [1, 32, 64]
+  dims: [784, 500, 200]
+  latent: 10
 
 loss_fn: 
   name: ELBO
@@ -17,7 +18,7 @@ hyperparams:
   optim: AdamW
   lr: 0.0001
   weight_decay: 0.001
-  epochs: 100
+  epochs: 200
   batch_size: 128
 
 save_path: saved

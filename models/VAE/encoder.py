@@ -3,29 +3,31 @@ from torch import nn
 from torch.distributions.normal import Normal
 
 from typing import List
+from einops import rearrange
 
 from .block import Block
-from .up_down import DownSample
 
 class Encoder(nn.Module):
     def __init__(self,
-                 dims:List = [1, 32, 64, 128]):
+                 dims:List = [1, 32, 64],
+                 latent:int = 10):
         super().__init__()
         
         in_out = [x for x in zip(dims[:-1], dims[1:])]
         
         self.block_li = nn.ModuleList([])
         
-        for dim_in, dim_out in in_out:
-            self.block_li.append(nn.Sequential(Block(dim_in, dim_out),
-                                               DownSample(dim_out, dim_out)))
+        for idx, (dim_in, dim_out) in enumerate(in_out, start=1):
+            self.block_li.append(Block(dim_in, dim_out, False if idx == len(in_out) else True))
             
-        self.latent_size = dims[-1]
+        self.latent = latent
         
-        self.mu = nn.Conv2d(self.latent_size, self.latent_size, 3, 1, 1)
-        self.log_var = nn.Conv2d(self.latent_size, self.latent_size, 3, 1, 1)
+        self.mu = nn.Linear(dims[-1], self.latent)
+        self.log_var = nn.Linear(dims[-1], self.latent)
         
     def forward(self, x):
+        x = rearrange(x, 'b c h w -> b (c h w)')
+        
         for block in self.block_li:
             x = block(x)
         

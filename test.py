@@ -36,12 +36,14 @@ def main(cfg):
     print(f"Load Model {model_cfg['name']}")
     
     # Random Sampling from Gaussian
-    gaussian = dist.Normal(loc=torch.zeros((1, 64, 7, 7)),
-                           scale=torch.ones((1, 64, 7, 7)))
+    latent_size = model_cfg['latent']
+    gaussian = dist.Normal(loc=torch.zeros((1, latent_size)),
+                           scale=torch.ones((1, latent_size)))
     random_vector = gaussian.sample().to(device)
     
     # Generation
-    x_prime = model.decoder(random_vector)
+    img_size = (1, 28, 28)
+    x_prime = model.decoder(random_vector, img_size)
     
     # Reshape & Visualization
     x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy() * 255.
