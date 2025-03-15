@@ -2,32 +2,32 @@ import torch
 from torch import nn
 from torch.distributions.normal import Normal
 
+from typing import List
+
+from .block import Block
+from .up_down import DownSample
+
 class Encoder(nn.Module):
     def __init__(self,
-                 latent_size:int=200):
-        '''
-            latent_size(int): latent variable(z)의 크기
-        '''
-        
+                 dims:List = [1, 32, 64, 128]):
         super().__init__()
         
-        self.latent_size = latent_size
+        in_out = [x for x in zip(dims[:-1], dims[1:])]
         
-        self.li1 = nn.Linear(784, self.latent_size)
-        self.li2 = nn.Linear(self.latent_size, self.latent_size)
-        self.relu = nn.ReLU()
+        self.block_li = nn.ModuleList([])
         
-        self.mu = nn.Linear(in_features=self.latent_size, out_features=self.latent_size)
-        self.log_var = nn.Linear(in_features=self.latent_size, out_features=self.latent_size)
+        for dim_in, dim_out in in_out:
+            self.block_li.append(nn.Sequential(Block(dim_in, dim_out),
+                                               DownSample(dim_out, dim_out)))
+            
+        self.latent_size = dims[-1]
         
-        # Gaussian, N(0, 1)
-        # loc = mean, scale = sigma
-        self.gaussian = Normal(loc=torch.zeros(self.latent_size),
-                               scale=torch.ones(self.latent_size))
+        self.mu = nn.Conv2d(self.latent_size, self.latent_size, 3, 1, 1)
+        self.log_var = nn.Conv2d(self.latent_size, self.latent_size, 3, 1, 1)
         
     def forward(self, x):
-        x = self.relu(self.li1(x.reshape(x.shape[0], -1)))
-        x = self.relu(self.li2(x))
+        for block in self.block_li:
+            x = block(x)
         
         mu = self.mu(x)
         log_var = self.log_var(x)
@@ -37,7 +37,10 @@ class Encoder(nn.Module):
         return z, mu, std
     
     def reparameterization_trick(self, mu, log_var):
-        eps = self.gaussian.sample().to(log_var.device)
+        gaussian = Normal(loc=torch.zeros(mu.size()),
+                          scale=torch.ones(log_var.size()))
+        
+        eps = gaussian.sample().to(log_var.device)
         
         std = torch.exp(0.5 * log_var) # (1) 0.5 * log_var -> log_std, (2) torch.exp(log_std) -> std
         

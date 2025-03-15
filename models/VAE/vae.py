@@ -6,13 +6,11 @@ from torch import nn
 
 class VAE(nn.Module):
     def __init__(self,
-                 latent_size=200,
-                 x_size=(1, 28, 28)):
+                 dims=[1, 32, 64, 128]):
         super().__init__()
         
-        self.encoder = Encoder(latent_size=latent_size)
-        self.decoder = Decoder(latent_size=latent_size,
-                               x_size=x_size)
+        self.encoder = Encoder(dims)
+        self.decoder = Decoder(dims[::-1])
 
     def forward(self, x):
         z, mu, std = self.encoder(x)

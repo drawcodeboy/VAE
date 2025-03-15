@@ -1,0 +1,14 @@
+expr: Experiment
+
+device: cuda
+
+model:
+  name: VAE
+  dims: [1, 32, 64]
+
+hyperparams:
+  batch_size: 128
+
+save_path: saved
+
+load_weights: vae.mnist.100epochs.pth

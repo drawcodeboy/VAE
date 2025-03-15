@@ -6,7 +6,14 @@ from utils import *
 import torch
 from torch import optim
 
-import time
+import time, argparse
+
+def add_args_parser():
+    parser = argparse.ArgumentParser(add_help=False)
+    
+    parser.add_argument('--config', type=str, default='vae.mnist')
+    
+    return parser
 
 def main(cfg):
     print(f"=================[{cfg['expr']}]=================")
@@ -17,6 +24,7 @@ def main(cfg):
         device = cfg['device']
     else:
         device = 'cpu'
+    print(f"Device: {device}")
     
     # Hyperparameter Settings
     hp_cfg = cfg['hyperparams']
@@ -32,14 +40,11 @@ def main(cfg):
     
     # Load Model
     model_cfg = cfg['model']
-    model = load_model(model=model_cfg['name'],
-                       latent_size=model_cfg['latent_size'],
-                       x_size=tuple(model_cfg['x_size'])).to(device)
+    model = load_model(**model_cfg).to(device)
     print(f"Load Model {model_cfg['name']}")
     
     # Load Loss function
-    loss_fn = load_loss_fn(loss_fn=cfg['loss_fn'],
-                           latent_size=model_cfg['latent_size']).to(device)
+    loss_fn = load_loss_fn(**cfg['loss_fn']).to(device)
     print(f"Load Loss function {cfg['loss_fn']}")
     
     # Load Optimizer
@@ -87,7 +92,10 @@ def main(cfg):
     print(f"<Total Train Time: {total_elapsed_time//60:02d}m {total_elapsed_time%60:02d}s>")
     
 if __name__ == '__main__':
-    with open('config.yaml') as f:
+    parser = argparse.ArgumentParser('Training', parents=[add_args_parser()])
+    args = parser.parse_args()
+    
+    with open(f'configs/train.{args.config}.yaml') as f:
         cfg = yaml.full_load(f)
     
     main(cfg)

@@ -1,26 +1,30 @@
 import torch
 from torch import nn
 
+from typing import List
+
+from .block import Block
+from .up_down import UpSample
+
 class Decoder(nn.Module):
     def __init__(self,
-                 latent_size:int=200,
-                 x_size:tuple=(1, 28, 28)):
+                 dims:List = [128, 64, 32, 1]):
         super().__init__()
         
-        self.latent_size = latent_size
+        in_out = [x for x in zip(dims[:-1], dims[1:])]
+                
+        self.block_li = nn.ModuleList([])
         
-        # image size에 맞는 vector 크기로 Linear transform하고
-        # forward에서 image size로 reshape
-        self.output_size = 1
-        for size in x_size:
-            self.output_size *= size
-        self.x_size = x_size
+        for dim_in, dim_out in in_out:
+            self.block_li.append(nn.Sequential(UpSample(dim_in, dim_in),
+                                               Block(dim_in, dim_out)))
         
-        self.li = nn.Linear(self.latent_size, self.output_size)
         self.sigmoid = nn.Sigmoid()
         
-    def forward(self, z):
-        x = self.li(z).reshape(-1, *self.x_size)
+    def forward(self, x):
+        for block in self.block_li:
+            x = block(x)
+            
         x = self.sigmoid(x) # p(x|z)
     
         return x

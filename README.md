@@ -26,14 +26,27 @@ $$
     <img src="./figures/generation_200_04.jpg" width="20%" height="20%">
 </p>
 
-## Setting
+## Installation
 ```
+# Docker (Optional)
+docker pull ubuntu:22.04
+docker run -itd --gpus=all --shm-size=16G --name=vae ubuntu:22.04 /bin/bash
+
+apt-get update
+apt-get install sudo
+sudo apt-get install git
+
 # Download
 git clone https://github.com/drawcodeboy/VAE.git
+cd VAE
+
+# Install Python
+sudo apt-get install python3
+sudo apt-get install python3-venv
 
 # Virtual Environment
-python venv -m .venv
-.venv\Scripts\activate # Windows command
+python3 venv -m .venv
+source .venv/bin/activate
 
 # Install packages
 pip install -r requirements.txt
