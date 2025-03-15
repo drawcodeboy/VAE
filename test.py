@@ -42,11 +42,11 @@ def main(cfg):
     random_vector = gaussian.sample().to(device)
     
     # Generation
-    img_size = (1, 28, 28)
+    img_size = tuple(cfg['image_size'])
     x_prime = model.decoder(random_vector, img_size)
     
     # Reshape & Visualization
-    x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy() * 255.
+    x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy()
     
     plt.imshow(x_prime, cmap='gray')
     plt.savefig('test.png')

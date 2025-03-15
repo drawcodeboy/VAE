@@ -23,7 +23,7 @@ class ELBO(nn.Module):
         first_term = dist.kl_divergence(variational, prior).sum() / bz # first mean inner each sample, second mean inter sample
         
         # 2. Reconstruction Term
-        second_term = F.mse_loss(x_prime, x, reduction='sum') / bz # NLL이랑 같음
+        second_term = F.l1_loss(x_prime, x, reduction='sum') / bz
         
         # print(f"First term: {first_term.item()}, Second term: {second_term.item()}")
         

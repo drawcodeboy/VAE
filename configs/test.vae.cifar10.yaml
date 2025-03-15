@@ -4,14 +4,14 @@ device: cuda
 
 model:
   name: VAE
-  dims: [784, 500, 200]
-  latent: 10
+  dims: [3072, 1000, 700]
+  latent: 500
 
 hyperparams:
   batch_size: 128
 
 save_path: saved
 
-image_size: [1, 28, 28]
+image_size: [3, 32, 32]
 
-load_weights: vae.mnist.200epochs.pth
+load_weights: vae.cifar10.010epochs.pth
