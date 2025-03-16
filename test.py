@@ -6,7 +6,6 @@ from models import load_model
 from utils import *
 
 import torch
-import torch.distributions as dist
 import matplotlib.pyplot as plt
 from einops import rearrange
 import cv2

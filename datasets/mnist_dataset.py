@@ -33,6 +33,7 @@ class MNIST_Dataset():
         
         image = np.array(image.getdata()).reshape(28, 28).astype(np.float32)
         image /= 255.
+
         image = torch.tensor(image, dtype=torch.float32).unsqueeze(0)
         
         label = torch.tensor(label, dtype=torch.int64)

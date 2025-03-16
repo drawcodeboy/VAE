@@ -9,4 +9,4 @@ def load_model(**cfg):
 
 def load_loss_fn(**cfg):
     if cfg['name'] == 'ELBO':
-        return ELBO()
+        return ELBO(alpha=cfg['alpha'])

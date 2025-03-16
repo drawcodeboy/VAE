@@ -33,6 +33,7 @@ class CIFAR10_Dataset():
         
         image = np.array(image.getdata()).astype(np.float32)
         image /= 255.
+        
         image = torch.tensor(image, dtype=torch.float32).reshape(3, 32, 32)
         
         label = torch.tensor(label, dtype=torch.int64)

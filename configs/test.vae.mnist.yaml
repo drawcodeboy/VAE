@@ -5,7 +5,7 @@ device: cuda:2
 model:
   name: VAE
   dims: [1, 32, 64]
-  latent: 10
+  latent: 100
   img_size: [1, 28, 28]
 
 hyperparams:
@@ -13,4 +13,4 @@ hyperparams:
 
 save_path: saved
 
-load_weights: vae.mnist.060epochs.pth
+load_weights: vae.mnist.020epochs.pth

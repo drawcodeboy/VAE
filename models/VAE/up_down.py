@@ -12,7 +12,7 @@ class DownSample(nn.Module):
 
         self.acti = None
         if acti == True:
-            self.acti = nn.Tanh()
+            self.acti = nn.SiLU()
         else:
             self.acti = nn.Identity()
         
@@ -25,15 +25,13 @@ class UpSample(nn.Module):
         
         self.up = nn.ConvTranspose2d(dim_in, dim_out, 3, stride=2, padding=1, output_padding=1)
         self.bn1 = nn.BatchNorm2d(dim_out)
-        self.conv = nn.Conv2d(dim_out, dim_out, 3, 1, 1)
-        self.bn2 = nn.BatchNorm2d(dim_out)
         
         self.acti = None
         if acti == True:
-            self.acti = nn.Tanh()
+            self.acti = nn.SiLU()
         else:
             self.acti = nn.Identity()
     
     def forward(self, x):
         x = self.acti(self.bn1(self.up(x)))
-        return self.acti(self.bn2(self.conv(x)))
+        return x

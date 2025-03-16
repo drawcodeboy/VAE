@@ -13,4 +13,4 @@ hyperparams:
 
 save_path: saved
 
-load_weights: vae.celeba.050epochs.pth
+load_weights: vae.celeba.020epochs.pth

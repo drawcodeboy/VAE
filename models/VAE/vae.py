@@ -19,7 +19,7 @@ class VAE(nn.Module):
         factor = 2 ** (len(dims) - 1)
         self.decode_input_size = (dims[-1], img_size[1] // factor, img_size[2] // factor)
         
-        self.encoder = Encoder(dims, self.latent)
+        self.encoder = Encoder(dims, self.latent, self.img_size)
         self.decoder = Decoder(dims[::-1], self.latent, self.decode_input_size)
 
     def forward(self, x):

@@ -25,7 +25,6 @@ class Decoder(nn.Module):
             decode_in_dim *= x
         
         self.li = nn.Linear(self.latent, decode_in_dim)
-        self.relu = nn.ReLU()
         
         in_out = [x for x in zip(dims[:-1], dims[1:])]                
         self.block_li = nn.ModuleList([])
@@ -35,15 +34,11 @@ class Decoder(nn.Module):
                 self.block_li.append(UpSample(dim_in, dim_out))
             else:
                 self.block_li.append(nn.Sequential(UpSample(dim_in, dim_in),
-                                                   nn.Conv2d(dim_in, dim_in, 3, 1, 1),
-                                                   nn.BatchNorm2d(dim_in),
-                                                   nn.ReLU(),
                                                    nn.Conv2d(dim_in, dim_out, 3, 1, 1),
-                                                   nn.BatchNorm2d(dim_out),
                                                    nn.Sigmoid()))
         
     def forward(self, x):
-        x = self.relu(self.li(x))
+        x = self.li(x)
         c, w, h = self.decode_input_size
         
         x = rearrange(x, 'b (c w h) -> b c w h', c=c, w=w, h=h)

@@ -34,6 +34,7 @@ class CelebA_Dataset():
         img = img[h_start:h_start+128, w_start:w_start+128, :]
         
         img = np.array(img).reshape(3, 128, 128) / 255.
+        
         img = torch.tensor(img, dtype=torch.float32)
         
         label = 1
