@@ -35,10 +35,19 @@ docker run -itd --gpus=all --shm-size=16G --name=vae ubuntu:22.04 /bin/bash
 apt-get update
 apt-get install sudo
 sudo apt-get install git
+sudo apt-get install gdown # For CelebA Dataset
+sudo apt-get install unzip
+sudo apt-get install -y libgl1-mesa-glx # OpenCV
+sudo apt-get install -y libglib2.0-0 # OpenCV
 
 # Download
 git clone https://github.com/drawcodeboy/VAE.git
 cd VAE
+
+# Download CelebA
+gdown --id 1m8-EBPgi5MRubrm6iQjafK2QMHDBMSfJ --output data/
+unzip data/celeba.zip -d data/
+unzip data/celeba/img_align_celeba.zip -d data/celeba/
 
 # Install Python
 sudo apt-get install python3
@@ -55,12 +64,6 @@ pip install -r requirements.txt
 
 # training
 python train.py
-
-# Inference (1) : Reconstruction
-python infer.py --method=reconstruct --num=12 # Dataset sample num 
-
-# Inference (2) : Generate
-python infer.py --method=generate --num=1 # Figure save num
 ```
 
 ## References

@@ -9,6 +9,7 @@ import torch
 import torch.distributions as dist
 import matplotlib.pyplot as plt
 from einops import rearrange
+import cv2
 
 def get_args_parser():
     parser = argparse.ArgumentParser(add_help=False)
@@ -35,21 +36,12 @@ def main(cfg):
     model.load_state_dict(ckpt['model'])
     print(f"Load Model {model_cfg['name']}")
     
-    # Random Sampling from Gaussian
-    latent_size = model_cfg['latent']
-    gaussian = dist.Normal(loc=torch.zeros((1, latent_size)),
-                           scale=torch.ones((1, latent_size)))
-    random_vector = gaussian.sample().to(device)
-    
-    # Generation
-    img_size = tuple(cfg['image_size'])
-    x_prime = model.decoder(random_vector, img_size)
+    x_prime = model.sample(1, device)
     
     # Reshape & Visualization
-    x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy()
+    x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy() * 255.
     
-    plt.imshow(x_prime, cmap='gray')
-    plt.savefig('test.png')
+    cv2.imwrite('test.jpg', x_prime)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(parents=[get_args_parser()])

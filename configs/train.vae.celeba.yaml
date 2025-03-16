@@ -1,15 +1,16 @@
 expr: Experiment
 
-device: cuda
+device: cuda:2
 
 data:
-  dataset: CIFAR10
+  dataset: CelebA
   mode: train # should consider train or test!
 
 model:
   name: VAE
-  dims: [3072, 1000, 700]
-  latent: 500
+  dims: [3, 32, 64, 128]
+  latent: 100
+  img_size: [3, 128, 128]
 
 loss_fn: 
   name: ELBO

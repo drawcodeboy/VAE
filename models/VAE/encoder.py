@@ -6,6 +6,7 @@ from typing import List
 from einops import rearrange
 
 from .block import Block
+from .up_down import DownSample
 
 class Encoder(nn.Module):
     def __init__(self,
@@ -13,12 +14,14 @@ class Encoder(nn.Module):
                  latent:int = 10):
         super().__init__()
         
+        self.dims = dims
+        
         in_out = [x for x in zip(dims[:-1], dims[1:])]
         
         self.block_li = nn.ModuleList([])
         
         for idx, (dim_in, dim_out) in enumerate(in_out, start=1):
-            self.block_li.append(Block(dim_in, dim_out, False if idx == len(in_out) else True))
+            self.block_li.append(DownSample(dim_in, dim_out))
             
         self.latent = latent
         
@@ -26,10 +29,11 @@ class Encoder(nn.Module):
         self.log_var = nn.Linear(dims[-1], self.latent)
         
     def forward(self, x):
-        x = rearrange(x, 'b c h w -> b (c h w)')
-        
         for block in self.block_li:
             x = block(x)
+        
+        # Global Average Pooling
+        x = torch.mean(x, dim=(2, 3))
         
         mu = self.mu(x)
         log_var = self.log_var(x)

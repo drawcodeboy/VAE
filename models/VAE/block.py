@@ -8,7 +8,8 @@ class Block(nn.Module):
                  acti:bool = True):
         super().__init__()
         
-        self.li1 = nn.Linear(in_channels, out_channels)
+        self.li1 = nn.Conv2d(in_channels, out_channels, 3, 1, 1)
+        self.bn1 = nn.BatchNorm2d(out_channels)
         
         if acti == True:
             self.acti = nn.ReLU()

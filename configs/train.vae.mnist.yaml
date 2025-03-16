@@ -1,6 +1,6 @@
 expr: Experiment
 
-device: cuda
+device: cuda:2
 
 data:
   dataset: MNIST
@@ -8,8 +8,9 @@ data:
 
 model:
   name: VAE
-  dims: [784, 500, 200]
+  dims: [1, 32, 64]
   latent: 10
+  img_size: [1, 28, 28]
 
 loss_fn: 
   name: ELBO
