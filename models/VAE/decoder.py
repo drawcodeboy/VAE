@@ -12,7 +12,8 @@ class Decoder(nn.Module):
     def __init__(self,
                  dims:List = [64, 32, 1],
                  latent:int = 10,
-                 decode_input_size:Tuple = (64, 4, 4)):
+                 decode_input_size:Tuple = (64, 4, 4),
+                 up:dict = {}):
         super().__init__()
         
         self.dims = dims
@@ -31,9 +32,9 @@ class Decoder(nn.Module):
         
         for idx, (dim_in, dim_out) in enumerate(in_out, start=1):
             if idx < len(in_out):
-                self.block_li.append(UpSample(dim_in, dim_out))
+                self.block_li.append(UpSample(dim_in, dim_out, True, up))
             else:
-                self.block_li.append(nn.Sequential(UpSample(dim_in, dim_in),
+                self.block_li.append(nn.Sequential(UpSample(dim_in, dim_in, True, up),
                                                    nn.Conv2d(dim_in, dim_out, 3, 1, 1),
                                                    nn.Sigmoid()))
         

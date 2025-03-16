@@ -12,7 +12,8 @@ class Encoder(nn.Module):
     def __init__(self,
                  dims:List = [1, 32, 64],
                  latent:int = 10,
-                 img_size:Tuple = (1, 28, 28)):
+                 img_size:Tuple = (1, 28, 28),
+                 down:dict = {}):
         super().__init__()
         
         self.dims = dims
@@ -22,13 +23,16 @@ class Encoder(nn.Module):
         self.block_li = nn.ModuleList([])
         
         for idx, (dim_in, dim_out) in enumerate(in_out, start=1):
-            self.block_li.append(DownSample(dim_in, dim_out))
+            self.block_li.append(DownSample(dim_in, dim_out, True, down))
             
         self.latent = latent
         
         factor = (2 ** (len(dims)-1))
-        self.mu = nn.Linear(dims[-1] * (img_size[1] // factor) * (img_size[2] // factor), self.latent)
-        self.log_var = nn.Linear(dims[-1] * (img_size[1] // factor) * (img_size[2] // factor), self.latent)
+        self.li = nn.Linear(dims[-1] * (img_size[1] // factor) * (img_size[2] // factor), self.latent)
+        self.li_bn = nn.BatchNorm1d(self.latent)
+        self.acti = nn.ReLU()
+        self.mu = nn.Linear(self.latent, self.latent)
+        self.log_var = nn.Linear(self.latent, self.latent)
         
     def forward(self, x):
         for block in self.block_li:
@@ -36,8 +40,9 @@ class Encoder(nn.Module):
         
         # Global Average Pooling
         # x = torch.mean(x, dim=(2, 3))
-        x = rearrange(x, 'b c h w -> b (c h w)')
+        x = x.flatten(start_dim=1)
         
+        x = self.acti(self.li_bn(self.li(x)))
         mu = self.mu(x)
         log_var = self.log_var(x)
         

@@ -9,12 +9,25 @@ data:
 model:
   name: VAE
   dims: [1, 32, 64]
-  latent: 100
+  latent: 16
   img_size: [1, 28, 28]
+  down:
+    conv1:
+      kernel: 3
+      stride: 1
+      padding: 1
+    conv2:
+      kernel: 3
+      stride: 2
+      padding: 1
+  up:
+    conv2:
+      kernel: 3
+      stride: 1
+      padding: 1
 
 loss_fn: 
   name: ELBO
-  alpha: 0.1
  
 hyperparams:
   optim: AdamW

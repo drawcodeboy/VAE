@@ -35,9 +35,12 @@ def main(cfg):
     model.load_state_dict(ckpt['model'])
     print(f"Load Model {model_cfg['name']}")
     
-    x_prime = model.sample(1, device)
+    model.eval()
+    with torch.no_grad():
+        x_prime = model.sample(1, device)
     
     # Reshape & Visualization
+    print(f"Generation Shape: {x_prime.shape}")
     x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy() * 255.
     
     cv2.imwrite('test.jpg', x_prime)

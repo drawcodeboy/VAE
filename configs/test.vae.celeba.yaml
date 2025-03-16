@@ -5,8 +5,23 @@ device: cuda:2
 model:
   name: VAE
   dims: [3, 32, 64, 128]
-  latent: 100
+  latent: 256
   img_size: [3, 128, 128]
+  down:
+    conv1:
+      kernel: 3
+      stride: 1
+      padding: 1
+    conv2:
+      kernel: 3
+      stride: 2
+      padding: 1
+  up:
+    conv2:
+      kernel: 3
+      stride: 1
+      padding: 1
+
 
 hyperparams:
   batch_size: 128

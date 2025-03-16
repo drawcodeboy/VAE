@@ -5,8 +5,10 @@ def load_model(**cfg):
     if cfg['name'] == 'VAE':
         return VAE(dims=cfg['dims'],
                    latent=cfg['latent'],
-                   img_size=cfg['img_size'])
+                   img_size=cfg['img_size'],
+                   down=cfg['down'],
+                   up=cfg['up'])
 
 def load_loss_fn(**cfg):
     if cfg['name'] == 'ELBO':
-        return ELBO(alpha=cfg['alpha'])
+        return ELBO()

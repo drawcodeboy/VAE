@@ -5,12 +5,27 @@ device: cuda:2
 model:
   name: VAE
   dims: [1, 32, 64]
-  latent: 100
+  latent: 16
   img_size: [1, 28, 28]
+  down:
+    conv1:
+      kernel: 3
+      stride: 1
+      padding: 1
+    conv2:
+      kernel: 3
+      stride: 2
+      padding: 1
+  up:
+    conv2:
+      kernel: 3
+      stride: 1
+      padding: 1
+
 
 hyperparams:
   batch_size: 128
 
 save_path: saved
 
-load_weights: vae.mnist.020epochs.pth
+load_weights: vae.mnist.100epochs.pth
