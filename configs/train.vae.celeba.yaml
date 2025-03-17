@@ -1,6 +1,6 @@
 expr: Experiment
 
-device: cuda:2
+device: cuda
 
 data:
   dataset: CelebA
@@ -8,23 +8,9 @@ data:
 
 model:
   name: VAE
-  dims: [3, 32, 64, 128]
-  latent: 256
+  dims: [3, 32, 64, 128, 256]
+  latent: 128
   img_size: [3, 128, 128]
-  down:
-    conv1:
-      kernel: 3
-      stride: 1
-      padding: 1
-    conv2:
-      kernel: 3
-      stride: 2
-      padding: 1
-  up:
-    conv2:
-      kernel: 3
-      stride: 1
-      padding: 1
 
 loss_fn: 
   name: ELBO
@@ -34,6 +20,6 @@ hyperparams:
   lr: 0.0001
   weight_decay: 0.001
   epochs: 200
-  batch_size: 128
+  batch_size: 64
 
 save_path: saved

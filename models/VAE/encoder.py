@@ -5,15 +5,13 @@ from torch.distributions.normal import Normal
 from typing import List, Tuple
 from einops import rearrange
 
-from .block import Block
 from .up_down import DownSample
 
 class Encoder(nn.Module):
     def __init__(self,
                  dims:List = [1, 32, 64],
                  latent:int = 10,
-                 img_size:Tuple = (1, 28, 28),
-                 down:dict = {}):
+                 img_size:Tuple = (1, 28, 28)):
         super().__init__()
         
         self.dims = dims
@@ -23,7 +21,7 @@ class Encoder(nn.Module):
         self.block_li = nn.ModuleList([])
         
         for idx, (dim_in, dim_out) in enumerate(in_out, start=1):
-            self.block_li.append(DownSample(dim_in, dim_out, True, down))
+            self.block_li.append(DownSample(dim_in, dim_out))
             
         self.latent = latent
         
@@ -38,8 +36,6 @@ class Encoder(nn.Module):
         for block in self.block_li:
             x = block(x)
         
-        # Global Average Pooling
-        # x = torch.mean(x, dim=(2, 3))
         x = x.flatten(start_dim=1)
         
         x = self.acti(self.li_bn(self.li(x)))

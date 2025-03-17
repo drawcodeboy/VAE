@@ -1,29 +1,37 @@
 # VAE Implementation with PyTorch
 
 ## Description
-* Variational Autoencoder
+* This is Variational Autoencoder(VAE) Implementation with PyTorch!
 
-## Preview
-### (1) Reconstruction: Original > 10 > 20 > 30 > 100 (Epochs)
+## Preview: CelebA
+### (1) Reconstruction
+
 <p align="center">
-    <img src="./figures/original.jpg" width="15%" height="15%">
-    <img src="./figures/reconstruction_010.jpg" width="15%" height="15%">
-    <img src="./figures/reconstruction_020.jpg" width="15%" height="15%">
-    <img src="./figures/reconstruction_030.jpg" width="15%" height="15%">
-    <img src="./figures/reconstruction_100.jpg" width="15%" height="15%">
+    <img src="./assets/test_recon_CelebA_1.jpg" width="50%" height="50%">
 </p>
 
-### (2) Generation from random vector 
-
-$$
-p_{\theta}(x\mid z), \\ \\ z \sim N(0, 1)
-$$
+### (2) Generation
 
 <p align="center">
-    <img src="./figures/generation_200_01.jpg" width="20%" height="20%">
-    <img src="./figures/generation_200_02.jpg" width="20%" height="20%">
-    <img src="./figures/generation_200_03.jpg" width="20%" height="20%">
-    <img src="./figures/generation_200_04.jpg" width="20%" height="20%">
+    <img src="./assets/test_gen_CelebA_1.jpg" width="20%" height="20%">
+    <img src="./assets/test_gen_CelebA_2.jpg" width="20%" height="20%">
+    <img src="./assets/test_gen_CelebA_3.jpg" width="20%" height="20%">
+    <img src="./assets/test_gen_CelebA_4.jpg" width="20%" height="20%">
+</p>
+
+## Preview: MNIST
+### (1) Reconstruction
+<p align="center">
+    <img src="./assets/test_recon_MNIST_1.jpg" width="50%" height="50%">
+</p>
+
+### (2) Generation
+
+<p align="center">
+    <img src="./assets/test_gen_MNIST_1.jpg" width="20%" height="20%">
+    <img src="./assets/test_gen_MNIST_2.jpg" width="20%" height="20%">
+    <img src="./assets/test_gen_MNIST_3.jpg" width="20%" height="20%">
+    <img src="./assets/test_gen_MNIST_4.jpg" width="20%" height="20%">
 </p>
 
 ## Installation
@@ -60,10 +68,17 @@ source .venv/bin/activate
 # Install packages
 pip install -r requirements.txt
 
-# !!when you train or inference, you should check config.yaml!!
+# train MNIST
+python train.py --config=vae.mnist
 
-# training
-python train.py
+# train CelebA
+python train.py --config=vae.celeba
+
+# test MNIST
+python test.py --config=vae.mnist
+
+# test CelebA
+python test.py --config=vae.celeba
 ```
 
 ## References

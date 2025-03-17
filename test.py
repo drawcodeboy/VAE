@@ -35,15 +35,31 @@ def main(cfg):
     model.load_state_dict(ckpt['model'])
     print(f"Load Model {model_cfg['name']}")
     
-    model.eval()
-    with torch.no_grad():
-        x_prime = model.sample(1, device)
-    
-    # Reshape & Visualization
-    print(f"Generation Shape: {x_prime.shape}")
-    x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy() * 255.
-    
-    cv2.imwrite('test.jpg', x_prime)
+    # Select Task
+    if cfg['task'] == 'recon':
+        data_cfg = cfg['data']
+        ds = load_dataset(**data_cfg)
+        x, _ = ds[200]
+        x = x.unsqueeze(0).to(device)
+        
+        model.eval()
+        with torch.no_grad():
+            x_prime, _, __ = model(x)
+        x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy() * 255.
+        
+        x = rearrange(x, '1 c h w -> h w c').detach().cpu().numpy() * 255.
+        
+        x_prime = cv2.hconcat([x, x_prime])
+        cv2.imwrite(f"assets/test_recon_{cfg['data']['dataset']}.jpg", x_prime)
+        
+    elif cfg['task'] == 'gen':
+        model.eval()
+        with torch.no_grad():
+            x_prime = model.sample(1, device)
+        
+        x_prime = rearrange(x_prime, '1 c h w -> h w c').detach().cpu().numpy() * 255.
+        
+        cv2.imwrite(f"assets/test_gen_{cfg['data']['dataset']}.jpg", x_prime)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(parents=[get_args_parser()])

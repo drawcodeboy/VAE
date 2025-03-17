@@ -9,11 +9,9 @@ from typing import List, Tuple
 
 class VAE(nn.Module):
     def __init__(self,
-                 dims:List = [1, 32, 64, 128],
+                 dims:List = [1, 32, 64],
                  latent:int = 10,
-                 img_size:Tuple = (1, 28, 28),
-                 down:dict = {},
-                 up:dict = {}):
+                 img_size:Tuple = (1, 28, 28)):
         super().__init__()
         
         self.latent = latent
@@ -21,8 +19,8 @@ class VAE(nn.Module):
         factor = 2 ** (len(dims) - 1)
         self.decode_input_size = (dims[-1], img_size[1] // factor, img_size[2] // factor)
         
-        self.encoder = Encoder(dims, self.latent, self.img_size, down)
-        self.decoder = Decoder(dims[::-1], self.latent, self.decode_input_size, up)
+        self.encoder = Encoder(dims, self.latent, self.img_size)
+        self.decoder = Decoder(dims[::-1], self.latent, self.decode_input_size)
 
     def forward(self, x):
         z, mu, std = self.encoder(x)

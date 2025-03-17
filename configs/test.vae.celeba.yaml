@@ -1,31 +1,19 @@
 expr: Experiment
 
-device: cuda:2
+task: gen # 'recon' or 'gen'
+
+device: cuda
+
+data:
+  dataset: CelebA
+  mode: test # should consider train or test!
 
 model:
   name: VAE
-  dims: [3, 32, 64, 128]
-  latent: 256
+  dims: [3, 32, 64, 128, 256]
+  latent: 128
   img_size: [3, 128, 128]
-  down:
-    conv1:
-      kernel: 3
-      stride: 1
-      padding: 1
-    conv2:
-      kernel: 3
-      stride: 2
-      padding: 1
-  up:
-    conv2:
-      kernel: 3
-      stride: 1
-      padding: 1
-
-
-hyperparams:
-  batch_size: 128
 
 save_path: saved
 
-load_weights: vae.celeba.020epochs.pth
+load_weights: vae.celeba.200epochs.pth

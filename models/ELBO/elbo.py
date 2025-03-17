@@ -12,7 +12,7 @@ class ELBO(nn.Module):
         first_term = -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp(), dim=1).mean()
         
         # 2) Reconstruction
-        second_term = F.mse_loss(x_prime, x, reduction='none').sum(dim=(1, 2, 3)).mean()
+        second_term = F.mse_loss(x_prime, x, reduction='none').sum(dim=(1,2,3)).mean()
         
         minus_elbo = first_term + second_term
         
