@@ -34,6 +34,12 @@
     <img src="./assets/test_gen_MNIST_4.jpg" width="20%" height="20%">
 </p>
 
+### (3) Latent Space t-SNE
+
+<p align="center">
+    <img src="./assets/t-SNE_MNIST.jpg" width="60%" height="60%">
+</p>
+
 ## Installation
 ```
 # Docker (Optional)

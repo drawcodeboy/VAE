@@ -18,7 +18,7 @@ class MNIST_Dataset():
         self.data=list(self.data)
         
         train_size = 10000
-        test_size = 500
+        test_size = 1000
         
         if mode == 'train':
             self.data = self.data[:train_size]
